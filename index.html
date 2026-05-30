@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday 🎂</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    overflow:hidden;
+    background:linear-gradient(135deg,#ff758c,#ff7eb3,#a18cd1);
+    color:white;
+}
+
+.page{
+    width:100%;
+    height:100vh;
+    display:none;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:20px;
+    position:relative;
+}
+
+.active{
+    display:flex;
+    animation:fade .8s;
+}
+
+@keyframes fade{
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+h1{
+    font-size:3rem;
+    margin-bottom:15px;
+}
+
+h2{
+    font-size:2rem;
+    margin-bottom:15px;
+}
+
+p{
+    max-width:700px;
+    line-height:1.8;
+    font-size:1.1rem;
+}
+
+button{
+    margin-top:25px;
+    padding:14px 30px;
+    border:none;
+    border-radius:40px;
+    font-size:1rem;
+    cursor:pointer;
+    background:white;
+    color:#ff4d79;
+    font-weight:bold;
+    transition:.3s;
+}
+
+button:hover{
+    transform:scale(1.08);
+}
+
+.cake{
+    font-size:6rem;
+    animation:bounce 2s infinite;
+}
+
+@keyframes bounce{
+    50%{
+        transform:translateY(-15px);
+    }
+}
+
+#typing{
+    min-height:150px;
+}
+
+.gallery{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+    gap:15px;
+    width:100%;
+    max-width:800px;
+    margin-top:20px;
+}
+
+.gallery img{
+    width:100%;
+    height:180px;
+    object-fit:cover;
+    border-radius:15px;
+    border:3px solid rgba(255,255,255,.5);
+}
+
+canvas{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+    z-index:999;
+}
+
+.balloon{
+    position:absolute;
+    bottom:-100px;
+    font-size:40px;
+    animation:float 10s linear infinite;
+}
+
+@keyframes float{
+    from{
+        transform:translateY(0);
+    }
+    to{
+        transform:translateY(-120vh);
+    }
+}
+
+.music-btn{
+    position:absolute;
+    top:20px;
+    right:20px;
+}
+
+@media(max-width:768px){
+
+    h1{
+        font-size:2.2rem;
+    }
+
+    h2{
+        font-size:1.6rem;
+    }
+
+    p{
+        font-size:1rem;
+    }
+
+    .cake{
+        font-size:4rem;
+    }
+}
+</style>
+</head>
+<body>
+
+<canvas id="confetti"></canvas>
+
+<!-- PAGE 1 -->
+
+<div class="page active" id="page1">
+
+    <button class="music-btn" onclick="toggleMusic()">
+        🎵 Music
+    </button>
+
+    <div class="cake" onclick="blowCandle()">
+🎂🕯️
+</div>
+
+    <h1>Happy Birthday 🎉</h1>
+
+    <h2 id="birthdayName"></h2>
+
+    <p>
+        Today is all about celebrating you.
+        Wishing you happiness, success, love and unforgettable memories.
+    </p>
+
+    <button onclick="nextPage(2)">
+        Open Surprise ❤️
+    </button>
+
+</div>
+
+<!-- PAGE 2 -->
+
+<div class="page" id="page2">
+
+    <h1>💖 A Special Message</h1>
+
+    <p id="typing"></p>
+
+    <button onclick="nextPage(3)">
+        See Memories 📸
+    </button>
+
+</div>
+
+<!-- PAGE 3 -->
+
+<div class="page" id="page3">
+
+    <h1>Beautiful Memories 📸</h1>
+
+    <div class="gallery">
+
+        <img src="BHJW9809.JPG">
+        <img src="GZFX9608.JPG">
+        <img src="IMG_0739.JPG">
+        <img src="IMG_1960.JPG">
+        <img src="IMG_1975.JPG">
+        <img src="IMG_1982.JPG">
+
+    </div>
+
+    <button onclick="fireworks(); goHome();">
+    Celebrate Again 🎊
+</button>
+
+</div>
+
+<!-- Optional Music -->
+<audio id="music" loop>
+    <!-- Replace birthday.mp3 with your own file -->
+    <source src="birthday.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+
+/* Page Navigation */
+
+function nextPage(page){
+
+    document.querySelectorAll('.page').forEach(p=>{
+        p.classList.remove('active');
+    });
+
+    document.getElementById('page'+page)
+    .classList.add('active');
+
+    if(page===2){
+        startTyping();
+    }
+
+    celebrate();  
+}
+const nameText="Sarah";
+
+let n=0;
+
+function revealName(){
+
+    const target=
+    document.getElementById("birthdayName");
+
+    let interval=setInterval(()=>{
+
+        target.innerHTML+=nameText[n];
+
+        n++;
+
+        if(n>=nameText.length){
+            clearInterval(interval);
+        }
+
+    },150);
+}
+
+revealName();
+function goHome(){
+
+    document.querySelectorAll('.page').forEach(page=>{
+        page.classList.remove('active');
+    });
+
+    document.getElementById('page1')
+    .classList.add('active');
+
+    document.getElementById('typing').innerHTML = '';
+
+    i = 0;
+    started = false;
+
+    celebrate();
+}
+function blowCandle(){
+
+    document.querySelector(".cake")
+    .innerHTML="🎂";
+
+    celebrate();
+}
+function fireworks(){
+
+    for(let i=0;i<8;i++){
+
+        setTimeout(()=>{
+
+            celebrate();
+
+        },i*300);
+    }
+}
+let musicStarted=false;
+
+document.addEventListener("click",()=>{
+
+    if(!musicStarted){
+
+        document.getElementById("music")
+        .play();
+
+        musicStarted=true;
+    }
+
+},{once:true});
+function createHeart(){
+
+    const heart=document.createElement("div");
+
+    heart.className="heart";
+
+    heart.innerHTML="❤️";
+
+    heart.style.left=Math.random()*100+"%";
+
+    document.body.appendChild(heart);
+
+    setTimeout(()=>{
+        heart.remove();
+    },6000);
+}
+
+setInterval(createHeart,800);
+/* Typewriter */
+
+const text=
+`Happy Birthday! 🎂
+
+May your life be filled with joy,
+laughter, success, good health,
+and endless beautiful moments.
+
+Thank you for being such a wonderful person.
+Today is your special day,
+so smile, celebrate and enjoy every second! ❤️`;
+
+let i=0;
+let started=false;
+
+function startTyping(){
+
+    if(started) return;
+
+    started=true;
+
+    const typing=document.getElementById("typing");
+
+    function type(){
+
+        if(i<text.length){
+
+            typing.innerHTML+=text.charAt(i);
+
+            i++;
+
+            setTimeout(type,40);
+        }
+    }
+
+    type();
+}
+
+/* Music */
+
+function toggleMusic(){
+
+    const music=document.getElementById('music');
+
+    if(music.paused){
+        music.play();
+    }else{
+        music.pause();
+    }
+}
+
+/* Balloons */
+
+for(let i=0;i<15;i++){
+
+    let b=document.createElement("div");
+
+    b.className="balloon";
+
+    b.innerHTML=["🎈","🎉","✨"][Math.floor(Math.random()*3)];
+
+    b.style.left=Math.random()*100+"%";
+
+    b.style.animationDuration=
+    (8+Math.random()*6)+"s";
+
+    document.body.appendChild(b);
+}
+
+/* Confetti */
+
+const canvas=document.getElementById("confetti");
+const ctx=canvas.getContext("2d");
+
+function resize(){
+
+    canvas.width=window.innerWidth;
+    canvas.height=window.innerHeight;
+}
+
+resize();
+
+window.addEventListener("resize",resize);
+
+let confetti=[];
+
+function createConfetti(){
+
+    confetti=[];
+
+    for(let i=0;i<250;i++){
+
+        confetti.push({
+
+            x:Math.random()*canvas.width,
+            y:Math.random()*canvas.height-canvas.height,
+            size:Math.random()*8+3,
+            speed:Math.random()*3+2,
+            color:`hsl(${Math.random()*360},100%,60%)`
+        });
+    }
+}
+
+function draw(){
+
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    confetti.forEach(c=>{
+
+        ctx.fillStyle=c.color;
+
+        ctx.fillRect(
+            c.x,
+            c.y,
+            c.size,
+            c.size
+        );
+
+        c.y+=c.speed;
+
+        if(c.y>canvas.height){
+
+            c.y=-20;
+        }
+    });
+
+    requestAnimationFrame(draw);
+}
+
+function celebrate(){
+
+    createConfetti();
+}
+
+celebrate();
+draw();
+
+</script>
+
+</body>
+</html>
